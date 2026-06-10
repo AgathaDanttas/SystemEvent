@@ -1,14 +1,18 @@
-﻿# Etapa 06 - Versao final integrada
+﻿# Etapa 09 - Versao final avancada baseada no Figma
 
-Versao completa baseada no ZIP novo.
+Entrega final mais completa.
 
-Inclui:
+Fluxos:
 
-- fluxo do usuario que busca lugares
-- login/cadastro
+- busca de espacos
+- cadastro/login de cliente
 - detalhes e agendamento
-- navegacao mobile inferior
+- favoritos
+- area de reservas/agendamentos
+- mensagens com fornecedores
+- perfil do usuario
+- cadastro/login de fornecedor
 - dashboard do fornecedor
-- troca entre fornecedor e cliente
+- navegacao mobile inferior funcional
 
-Tudo funciona no frontend, sem backend real.
+Tudo e frontend, sem backend real.
