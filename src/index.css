@@ -3,6 +3,7 @@
 @theme {
   --font-serif: "Playfair Display", Georgia, serif;
   --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-script: "Imperial Script", cursive;
   --color-gold-50: #FAF8F5;
   --color-gold-100: #F4F0E6;
   --color-gold-200: #EAE3D2;

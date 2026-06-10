@@ -6,9 +6,33 @@ import authBanner from '../assets/auth_banner.jpg';
 interface AuthScreenProps {
   onClose: () => void;
   initialMode?: 'login' | 'register';
+  onAuthSuccess?: (user: { name: string; email: string; role: string }) => void;
 }
 
-export default function AuthScreen({ onClose, initialMode = 'register' }: AuthScreenProps) {
+const getRegisteredUsers = () => {
+  const usersStr = localStorage.getItem('momentos_users');
+  if (!usersStr) {
+    const defaultUsers = [
+      {
+        name: 'Ana Silva',
+        email: 'ana.silva@email.com',
+        password: 'password123',
+        phone: '(11) 99999-9999',
+        cpf: '123.456.789-00',
+        role: 'cliente'
+      }
+    ];
+    localStorage.setItem('momentos_users', JSON.stringify(defaultUsers));
+    return defaultUsers;
+  }
+  try {
+    return JSON.parse(usersStr);
+  } catch (e) {
+    return [];
+  }
+};
+
+export default function AuthScreen({ onClose, initialMode = 'register', onAuthSuccess }: AuthScreenProps) {
   const [role, setRole] = useState<'cliente' | 'fornecedor'>('fornecedor');
   const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [showPassword, setShowPassword] = useState(false);
@@ -77,10 +101,21 @@ export default function AuthScreen({ onClose, initialMode = 'register' }: AuthSc
       return;
     }
 
+    const users = getRegisteredUsers();
+    if (users.some((u: any) => u.email.toLowerCase() === email.toLowerCase())) {
+      setErrors({ email: 'Este e-mail já está cadastrado.' });
+      return;
+    }
+
+    const newUser = { name, email, password, phone, cpf, role };
+    users.push(newUser);
+    localStorage.setItem('momentos_users', JSON.stringify(users));
+
     setErrors({});
     setSuccessMessage(`Cadastro de ${role === 'cliente' ? 'Cliente' : 'Fornecedor'} realizado com sucesso!`);
     setTimeout(() => {
       setSuccessMessage(null);
+      onAuthSuccess?.({ name, email, role });
       onClose();
     }, 2500);
   };
@@ -97,10 +132,24 @@ export default function AuthScreen({ onClose, initialMode = 'register' }: AuthSc
       return;
     }
 
+    const users = getRegisteredUsers();
+    const matchedUser = users.find((u: any) => u.email.toLowerCase() === email.toLowerCase());
+
+    if (!matchedUser) {
+      setErrors({ email: 'Esta conta não existe. Verifique o e-mail ou cadastre-se.' });
+      return;
+    }
+
+    if (matchedUser.password !== password) {
+      setErrors({ password: 'Senha incorreta. Tente novamente.' });
+      return;
+    }
+
     setErrors({});
     setSuccessMessage('Login efetuado com sucesso!');
     setTimeout(() => {
       setSuccessMessage(null);
+      onAuthSuccess?.({ name: matchedUser.name, email: matchedUser.email, role: matchedUser.role });
       onClose();
     }, 2000);
   };
@@ -108,27 +157,31 @@ export default function AuthScreen({ onClose, initialMode = 'register' }: AuthSc
   return (
     <div className="h-screen bg-[#FAF8F5] flex flex-col font-sans relative antialiased overflow-hidden">
       {/* Top Navbar */}
-      <header className="w-full h-20 bg-[#FAF8F5] border-b border-[#EAE3D2] px-6 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center cursor-pointer relative h-full" onClick={onClose}>
-          <img src={logoGold} alt="Momentos Inesquecíveis Logo" className="w-24 h-24 object-contain absolute left-0 top-1/2 -translate-y-1/2 max-w-none" />
-          <div className="flex flex-col text-left pl-[108px]">
-            <span className="font-serif text-base tracking-wider text-[#2B2A27] font-semibold leading-tight uppercase">
-              Momentos Inesquecíveis
-            </span>
-            <span className="text-[9px] uppercase tracking-[0.2em] text-[#B8975A] font-medium leading-none">
-              Plataforma
-            </span>
+      <header className="w-full h-20 bg-[#FAF8F5] border-b border-[#EAE3D2] sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto w-full h-full px-4 sm:px-6  flex items-center justify-between">
+          <div className="flex items-center cursor-pointer relative h-full" onClick={onClose}>
+            <img src={logoGold} alt="Momentos Inesquecíveis Logo" className="w-32 h-32 object-contain absolute left-0 top-1/2 -translate-y-1/2 max-w-none" />
+            <div className="flex flex-col text-left pl-[140px]">
+              <span className="font-serif text-base tracking-wider text-[#2B2A27] font-semibold leading-tight uppercase">
+                Momentos Inesquecíveis
+              </span>
+              <span className="text-[9px] uppercase tracking-[0.2em] text-[#B8975A] font-medium leading-none">
+                Plataforma
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className="flex items-center space-x-4">
-          <span className="text-xs text-[#6E6B64] hidden sm:inline">Já tem uma conta?</span>
-          <button
-            onClick={() => setIsLogin(true)}
-            className="px-5 py-2 text-xs font-semibold uppercase tracking-wider text-[#B8975A] hover:text-[#A38349] border border-[#B8975A] rounded-md transition-all bg-white hover:bg-[#FAF8F5]"
-          >
-            Entrar
-          </button>
+          <div className="flex items-center space-x-4">
+            <span className="text-xs text-[#6E6B64] hidden sm:inline">
+              {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
+            </span>
+            <button
+              onClick={() => setIsLogin(!isLogin)}
+              className="px-5 py-2 text-xs font-semibold uppercase tracking-wider text-[#B8975A] hover:text-[#A38349] border border-[#B8975A] rounded-md transition-all bg-white hover:bg-[#FAF8F5]"
+            >
+              {isLogin ? 'Cadastrar' : 'Entrar'}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -196,16 +249,14 @@ export default function AuthScreen({ onClose, initialMode = 'register' }: AuthSc
                         {/* Option Client */}
                         <div
                           onClick={() => setRole('cliente')}
-                          className={`border rounded-xl p-3 flex items-start gap-2.5 cursor-pointer transition-all duration-300 ${
-                            role === 'cliente'
-                              ? 'border-[#B8975A] bg-[#B8975A]/5 shadow-sm'
-                              : 'border-[#EAE3D2] bg-white hover:border-[#B8975A]/60'
-                          }`}
+                          className={`border rounded-xl p-3 flex items-start gap-2.5 cursor-pointer transition-all duration-300 ${role === 'cliente'
+                            ? 'border-[#B8975A] bg-[#B8975A]/5 shadow-sm'
+                            : 'border-[#EAE3D2] bg-white hover:border-[#B8975A]/60'
+                            }`}
                         >
                           <div
-                            className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
-                              role === 'cliente' ? 'bg-[#B8975A] text-white' : 'bg-[#F4F0E6] text-[#B8975A]'
-                            }`}
+                            className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${role === 'cliente' ? 'bg-[#B8975A] text-white' : 'bg-[#F4F0E6] text-[#B8975A]'
+                              }`}
                           >
                             <User className="w-3.5 h-3.5" />
                           </div>
@@ -220,16 +271,14 @@ export default function AuthScreen({ onClose, initialMode = 'register' }: AuthSc
                         {/* Option Provider */}
                         <div
                           onClick={() => setRole('fornecedor')}
-                          className={`border rounded-xl p-3 flex items-start gap-2.5 cursor-pointer transition-all duration-300 ${
-                            role === 'fornecedor'
-                              ? 'border-[#B8975A] bg-[#B8975A]/5 shadow-sm'
-                              : 'border-[#EAE3D2] bg-white hover:border-[#B8975A]/60'
-                          }`}
+                          className={`border rounded-xl p-3 flex items-start gap-2.5 cursor-pointer transition-all duration-300 ${role === 'fornecedor'
+                            ? 'border-[#B8975A] bg-[#B8975A]/5 shadow-sm'
+                            : 'border-[#EAE3D2] bg-white hover:border-[#B8975A]/60'
+                            }`}
                         >
                           <div
-                            className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
-                              role === 'fornecedor' ? 'bg-[#B8975A] text-white' : 'bg-[#F4F0E6] text-[#B8975A]'
-                            }`}
+                            className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${role === 'fornecedor' ? 'bg-[#B8975A] text-white' : 'bg-[#F4F0E6] text-[#B8975A]'
+                              }`}
                           >
                             <Store className="w-3.5 h-3.5" />
                           </div>

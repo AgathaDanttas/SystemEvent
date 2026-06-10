@@ -1,15 +1,14 @@
-﻿# Eventix - Etapa 02
+﻿# Etapa 06 - Versao final integrada
 
-Nesta etapa o projeto base foi renomeado para Eventix e ganhou a primeira pagina:
+Versao completa baseada no ZIP novo.
 
-- navbar
-- hero
-- formulario de busca visual
-- numeros/resumo do sistema
+Inclui:
 
-## Rodar
+- fluxo do usuario que busca lugares
+- login/cadastro
+- detalhes e agendamento
+- navegacao mobile inferior
+- dashboard do fornecedor
+- troca entre fornecedor e cliente
 
-```bash
-npm install
-npm run dev
-```
+Tudo funciona no frontend, sem backend real.
