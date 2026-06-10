@@ -1,79 +1,79 @@
-import { Search, MessagesSquare, ShieldAlert, Sparkles } from 'lucide-react';
+import { Search, MessageSquare, ShieldCheck, ChevronRight } from 'lucide-react';
 
 const STEPS = [
   {
-    number: '01',
     icon: Search,
-    title: 'Busque o local ideal',
-    description: 'Filtrando por data, localização, capacidade de convidados e orçamento.',
+    title: '1. Encontre o espaço ideal',
   },
   {
-    number: '02',
-    icon: MessagesSquare,
-    title: 'Compare e escolha',
-    description: 'Converse com proprietários, faça visitas virtuais e compare orçamentos com facilidade.',
+    icon: MessageSquare,
+    title: '2. Entre em contato',
   },
   {
-    number: '03',
-    icon: ShieldAlert,
-    title: 'Reserve com segurança',
-    description: 'Pagamento facilitado e contrato digital com total validade jurídica.',
+    icon: ShieldCheck,
+    title: '3. Receba sua proposta',
   },
   {
-    number: '04',
-    icon: Sparkles,
-    title: 'Viva o momento',
-    description: 'Aproveite seu evento sabendo que todos os detalhes e garantias estão seguros.',
+    icon: 'custom-glasses',
+    title: '4. Viva seu momento',
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section id="como-funciona" className="py-24 bg-[#FAF8F5]">
+    <section id="como-funciona" className="py-16 bg-[#FAF8F5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="text-center mb-20">
-          <h2 className="font-serif text-3xl sm:text-4xl text-[#2B2A27] font-normal">
+        {/* Title block matching mockup */}
+        <div className="text-center mb-12">
+          <h2 className="font-serif text-2xl sm:text-3xl text-[#2B2A27] font-semibold tracking-tight">
             Como funciona
           </h2>
-          <p className="text-[#6E6B64] font-light mt-3 text-sm sm:text-base max-w-xl mx-auto">
-            Encontre em poucos passos o local perfeito para o seu evento
+          <p className="text-[#6E6B64] font-light mt-2 text-xs sm:text-sm max-w-xl mx-auto">
+            Em poucos passos, o lugar perfeito para seu evento
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Horizontal steps flow */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-2 lg:gap-6 max-w-5xl mx-auto">
           {STEPS.map((step, index) => {
             const Icon = step.icon;
             return (
-              <div 
-                key={index} 
-                className="bg-white border border-[#EAE3D2] rounded-2xl p-8 relative flex flex-col items-start text-left shadow-sm hover:shadow-lg transition-all duration-300 group"
-              >
-                <span className="text-xs font-semibold text-[#B8975A]/60 tracking-wider">
-                  {step.number}
-                </span>
+              <div key={index} className="flex items-center w-full md:w-auto">
+                {/* Step Card */}
+                <div 
+                  className="bg-white border border-[#EAE3D2] rounded-3xl p-5 relative flex flex-col items-center text-center shadow-sm hover:shadow-md transition-all duration-300 group flex-1 md:flex-initial md:w-48 h-40 justify-center"
+                >
+                  <div className="w-12 h-12 rounded-full bg-[#FAF8F5] border border-[#B8975A]/20 flex items-center justify-center text-[#B8975A] group-hover:bg-[#B8975A] group-hover:text-white transition-all duration-300 shadow-inner mb-4">
+                    {Icon === 'custom-glasses' ? (
+                      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 transition-colors duration-300">
+                        <path d="M6 3h5v5c0 2.2-1.8 4-4 4H6V3z" />
+                        <path d="M8 12v7M5 19h6" />
+                        <path d="M18 3h-5v5c0 2.2 1.8 4 4 4h1v-9z" />
+                        <path d="M16 12v7M13 19h6" />
+                        <path d="m11 5 2 2M13 5l-2 2" />
+                      </svg>
+                    ) : (
+                      // @ts-ignore
+                      <Icon className="w-5 h-5 transition-colors duration-300" />
+                    )}
+                  </div>
 
-                <div className="my-6 w-12 h-12 rounded-xl bg-[#F4F0E6] flex items-center justify-center text-[#B8975A] group-hover:bg-[#B8975A] group-hover:text-white transition-all duration-300">
-                  <Icon className="w-6 h-6 transition-colors duration-300" />
+                  <h3 className="font-bold text-[11px] sm:text-xs text-[#2B2A27] px-2 leading-tight">
+                    {step.title}
+                  </h3>
                 </div>
 
-                <h3 className="font-semibold text-base text-[#2B2A27] mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-xs text-[#6E6B64] font-light leading-relaxed">
-                  {step.description}
-                </p>
+                {/* Arrow Divider (except for last step) */}
+                {index < STEPS.length - 1 && (
+                  <div className="hidden md:flex items-center justify-center text-[#B8975A] mx-2 flex-shrink-0 animate-pulse">
+                    <ChevronRight className="w-6 h-6 stroke-[1.5]" />
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
-
-        <div className="mt-16 text-center">
-          <button className="px-8 py-3.5 text-sm font-semibold text-white bg-[#B8975A] hover:bg-[#A38349] rounded-md transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg shadow-[#B8975A]/10">
-            Começar agora
-          </button>
-        </div>
-
       </div>
     </section>
   );
