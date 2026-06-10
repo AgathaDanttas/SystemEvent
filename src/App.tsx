@@ -1,230 +1,99 @@
-import { useState } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import FeaturedVenues from './components/FeaturedVenues';
-import FeaturesList from './components/FeaturesList';
-import HowItWorks from './components/HowItWorks';
-import Footer from './components/Footer';
-import AuthScreen from './components/AuthScreen';
-import BookingDetails from './components/BookingDetails';
-import VendorDashboard from './components/VendorDashboard';
-import RegisterBanner from './components/RegisterBanner';
-import { Home, Heart, Calendar, MessageSquare, User } from 'lucide-react';
-
-interface Venue {
-  id: number;
-  name: string;
-  location: string;
-  image: string;
-  rating: number;
-  reviewsCount: number;
-  capacity: number;
-  price: number;
-  category: string;
-  featured: boolean;
-}
-
-interface SearchFilters {
-  type: string;
-  location: string;
-  date: string;
-  guests: string;
-  budget: string;
-}
+﻿import { useState, type FormEvent } from 'react';
+import { Calendar, Menu, Search, X } from 'lucide-react';
+import heroImage from './assets/hero_event.png';
 
 function App() {
-  const [filters, setFilters] = useState<SearchFilters | null>(null);
-  const [view, setView] = useState<'landing' | 'login' | 'register'>('landing');
-  
-  // Auth state loaded from localStorage
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem('momentos_logged_in') === 'true';
-  });
-  const [userProfile, setUserProfile] = useState(() => {
-    const stored = localStorage.getItem('momentos_user_profile');
-    return stored ? JSON.parse(stored) : { name: '', email: '', avatar: '', role: '' };
-  });
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [message, setMessage] = useState('');
 
-  // Supplier dashboard state toggler
-  const [showSupplierDashboard, setShowSupplierDashboard] = useState(true);
-
-  // Selected Venue detail page state
-  const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
-  const [pendingVenue, setPendingVenue] = useState<Venue | null>(null);
-
-  const handleSearch = (newFilters: SearchFilters) => {
-    setFilters(newFilters);
-    const venuesSection = document.getElementById('locais-destaque');
-    if (venuesSection) {
-      venuesSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleSelectVenue = (venue: Venue) => {
-    if (isLoggedIn) {
-      setSelectedVenue(venue);
-    } else {
-      setPendingVenue(venue);
-      setView('login');
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('momentos_logged_in');
-    localStorage.removeItem('momentos_user_profile');
-    setIsLoggedIn(false);
-    setUserProfile({ name: '', email: '', avatar: '', role: '' });
-    setSelectedVenue(null);
-    setShowSupplierDashboard(true);
-  };
-
-  if (view === 'login' || view === 'register') {
-    return (
-      <AuthScreen
-        initialMode={view}
-        onClose={() => {
-          setView('landing');
-          setPendingVenue(null);
-        }}
-        onAuthSuccess={(user) => {
-          const initials = user.name
-            .split(' ')
-            .map((n: string) => n[0])
-            .slice(0, 2)
-            .join('')
-            .toUpperCase();
-          const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="#FAF0D9"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="serif" font-size="38" font-weight="bold" fill="#B8975A">${initials}</text></svg>`;
-          const avatarUrl = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-
-          const profile = {
-            name: user.name,
-            email: user.email,
-            avatar: avatarUrl,
-            role: user.role
-          };
-
-          localStorage.setItem('momentos_logged_in', 'true');
-          localStorage.setItem('momentos_user_profile', JSON.stringify(profile));
-
-          setIsLoggedIn(true);
-          setUserProfile(profile);
-          setView('landing');
-          setShowSupplierDashboard(true);
-          if (pendingVenue) {
-            setSelectedVenue(pendingVenue);
-            setPendingVenue(null);
-          }
-        }}
-      />
-    );
-  }
-
-  // Route to Vendor Dashboard if logged in as a supplier
-  if (isLoggedIn && userProfile.role === 'fornecedor' && showSupplierDashboard) {
-    return (
-      <VendorDashboard
-        userName={userProfile.name}
-        userEmail={userProfile.email}
-        userAvatar={userProfile.avatar}
-        onLogout={handleLogout}
-        onSwitchToClient={() => setShowSupplierDashboard(false)}
-      />
-    );
-  }
-
-  if (selectedVenue) {
-    return (
-      <BookingDetails
-        venue={selectedVenue}
-        onBack={() => setSelectedVenue(null)}
-        userName={userProfile.name}
-        userEmail={userProfile.email}
-        userAvatar={userProfile.avatar}
-      />
-    );
+  function handleSearch(event: FormEvent) {
+    event.preventDefault();
+    setMessage('Busca feita apenas para demonstracao nesta etapa.');
+    setTimeout(() => setMessage(''), 3000);
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] flex flex-col antialiased pb-20 lg:pb-0">
-      <Navbar 
-        onOpenAuth={(mode) => setView(mode)} 
-        isLoggedIn={isLoggedIn}
-        userAvatar={userProfile.avatar}
-        userName={userProfile.name}
-        userEmail={userProfile.email}
-        onLogout={handleLogout}
-        showDashboardLink={isLoggedIn && userProfile.role === 'fornecedor' && !showSupplierDashboard}
-        onSwitchToDashboard={() => setShowSupplierDashboard(true)}
-      />
+    <div className="min-h-screen bg-[#FAF8F5] text-[#2B2A27]">
+      <header className="sticky top-0 z-40 border-b border-[#EAE3D2] bg-[#FAF8F5]/95">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#B8975A] bg-[#F4F0E6] font-serif text-lg font-bold text-[#B8975A]">
+              E
+            </div>
+            <div>
+              <p className="font-serif text-xl font-semibold">Eventix</p>
+              <p className="text-[10px] uppercase tracking-[0.25em] text-[#B8975A]">Plataforma</p>
+            </div>
+          </div>
 
-      <main className="flex-grow">
-        <Hero onSearch={handleSearch} />
+          <nav className="hidden items-center gap-8 md:flex">
+            <a href="#inicio" className="text-sm font-medium text-[#6E6B64] hover:text-[#B8975A]">Inicio</a>
+            <a href="#sobre" className="text-sm font-medium text-[#6E6B64] hover:text-[#B8975A]">Sobre</a>
+            <button className="rounded-md bg-[#B8975A] px-4 py-2 text-sm font-semibold text-white">Entrar</button>
+          </nav>
 
-        <div id="locais-destaque">
-          <FeaturedVenues filters={filters} onSelectVenue={handleSelectVenue} />
+          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Abrir menu">
+            {menuOpen ? <X /> : <Menu />}
+          </button>
         </div>
 
-        <FeaturesList />
+        {menuOpen && (
+          <div className="space-y-2 border-t border-[#EAE3D2] px-4 py-4 md:hidden">
+            <a href="#inicio" className="block text-[#6E6B64]">Inicio</a>
+            <a href="#sobre" className="block text-[#6E6B64]">Sobre</a>
+          </div>
+        )}
+      </header>
 
-        <HowItWorks />
+      <main>
+        <section id="inicio" className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
+          <div>
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.25em] text-[#B8975A]">Sistema de eventos</p>
+            <h1 className="font-serif text-5xl leading-tight sm:text-7xl">Encontre o espaco ideal para seu evento</h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#6E6B64]">
+              A Eventix conecta clientes e proprietarios para buscar, reservar e gerenciar espacos.
+            </p>
 
-        {/* Crie sua conta banner under How It Works */}
-        <RegisterBanner onRegisterClick={() => setView('register')} />
+            <form onSubmit={handleSearch} className="mt-8 grid gap-3 rounded-2xl border border-[#EAE3D2] bg-white p-4 shadow-lg sm:grid-cols-[1fr_auto]">
+              <input placeholder="Buscar por cidade ou espaco" className="rounded-lg border border-[#EAE3D2] px-4 py-3 outline-none focus:border-[#B8975A]" />
+              <button className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#B8975A] px-5 py-3 font-semibold text-white">
+                <Search className="h-4 w-4" />
+                Buscar
+              </button>
+            </form>
+          </div>
+
+          <div className="overflow-hidden rounded-2xl border-4 border-white shadow-2xl">
+            <img src={heroImage} alt="Evento decorado" className="h-[430px] w-full object-cover" />
+          </div>
+        </section>
+
+        <section id="sobre" className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 pb-16 sm:grid-cols-3 sm:px-6 lg:px-8">
+          <InfoCard number="120+" text="espacos cadastrados" />
+          <InfoCard number="4.8" text="avaliacao media" />
+          <InfoCard number="24h" text="tempo medio de resposta" />
+        </section>
       </main>
 
-      <Footer />
+      <footer className="border-t border-[#EAE3D2] bg-white py-8">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 text-sm text-[#6E6B64] sm:px-6 lg:px-8">
+          <Calendar className="h-4 w-4 text-[#B8975A]" />
+          Eventix - etapa home
+        </div>
+      </footer>
 
-      {/* Mobile Bottom Navigation Bar (Matching Mockup) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#EAE3D2] z-50 py-2.5 px-4 shadow-lg flex items-center justify-between">
-        {[
-          { id: 'inicio', label: 'Início', icon: Home, action: () => { setView('landing'); setSelectedVenue(null); } },
-          { id: 'favoritos', label: 'Favoritos', icon: Heart, action: () => alert('Meus Favoritos - Recurso em breve!') },
-          { id: 'agendamentos', label: 'Agendamentos', icon: Calendar, action: () => {
-              if (selectedVenue) {
-                // Already in booking details
-              } else {
-                alert('Selecione um local em destaque para iniciar o agendamento!');
-              }
-            } 
-          },
-          { id: 'mensagens', label: 'Mensagens', icon: MessageSquare, action: () => alert('Mensagens - Recurso em breve!') },
-          { id: 'conta', label: 'Conta', icon: User, action: () => {
-              if (isLoggedIn) {
-                if (userProfile.role === 'fornecedor') {
-                  setShowSupplierDashboard(true);
-                } else {
-                  alert(`Conectado como: ${userProfile.name}\nEmail: ${userProfile.email}`);
-                }
-              } else {
-                setView('login');
-              }
-            }
-          }
-        ].map((tab) => {
-          const TabIcon = tab.icon;
-          
-          let isActive = false;
-          if (tab.id === 'inicio' && view === 'landing' && !selectedVenue) isActive = true;
-          if (tab.id === 'agendamentos' && selectedVenue) isActive = true;
-          if (tab.id === 'conta' && (view === 'login' || view === 'register' || (isLoggedIn && userProfile.role === 'fornecedor' && showSupplierDashboard))) isActive = true;
+      {message && <div className="fixed bottom-5 right-5 rounded-lg bg-[#2B2A27] px-5 py-4 text-sm text-white">{message}</div>}
+    </div>
+  );
+}
 
-          return (
-            <button
-              key={tab.id}
-              onClick={tab.action}
-              className="flex flex-col items-center justify-center flex-1 py-1 focus:outline-none cursor-pointer"
-            >
-              <TabIcon className={`w-5 h-5 transition-colors ${isActive ? 'text-[#B8975A] fill-[#B8975A]/10' : 'text-[#6E6B64]'}`} />
-              <span className={`text-[10px] font-semibold mt-1 transition-colors ${isActive ? 'text-[#B8975A]' : 'text-[#6E6B64]'}`}>
-                {tab.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+function InfoCard({ number, text }: { number: string; text: string }) {
+  return (
+    <div className="rounded-xl border border-[#EAE3D2] bg-white p-6">
+      <strong className="text-3xl">{number}</strong>
+      <p className="mt-1 text-sm text-[#6E6B64]">{text}</p>
     </div>
   );
 }
 
 export default App;
-

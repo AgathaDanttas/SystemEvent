@@ -1,59 +1,74 @@
-import { ClipboardCheck, BadgeCheck, Users, Percent, ShieldCheck } from 'lucide-react';
+import { CalendarRange, Building2, UserCheck, Handshake, ShieldCheck } from 'lucide-react';
 
 const FEATURES = [
   {
-    icon: ClipboardCheck,
-    title: 'Organização completa',
+    icon: CalendarRange,
+    title: 'Disponibilidade Real',
+    description: 'Consulte a agenda dos locais em tempo real e evite surpresas.',
   },
   {
-    icon: BadgeCheck,
-    title: 'Avaliações confiáveis',
+    icon: Building2,
+    title: 'Instalações Confiáveis',
+    description: 'Locais com infraestrutura completa e fotos verificadas.',
   },
   {
-    icon: Users,
-    title: 'Especialistas verificados',
+    icon: UserCheck,
+    title: 'Apoio de Especialistas',
+    description: 'Ajuda profissional de assessores para planejar cada detalhe.',
   },
   {
-    icon: Percent,
-    title: 'Orçamentos personalizados',
+    icon: Handshake,
+    title: 'Parceiros Homologados',
+    description: 'Conecte-se com fornecedores e buffets parceiros indicados.',
   },
   {
     icon: ShieldCheck,
-    title: 'Eventos seguros',
+    title: 'Processo Seguro',
+    description: 'Contrato digital e pagamento com garantia de ponta a ponta.',
   },
 ];
 
 export default function FeaturesList() {
   return (
-    <section className="py-16 bg-[#FAF8F5] relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title block matching mockup */}
-        <div className="text-center mb-8 relative z-10">
-          <span className="font-script text-5xl sm:text-6xl text-[#B8975A] block leading-none mb-1">
-            Tudo que você precisa
-          </span>
-          <h2 className="font-serif text-2xl sm:text-3xl text-[#2B2A27] font-semibold leading-tight">
-            para um evento perfeito
-          </h2>
-        </div>
+    <section className="py-24 bg-[#FAF8F5] relative overflow-hidden">
+      <div className="absolute top-1/2 -left-20 -translate-y-1/2 w-72 h-72 rounded-full border border-[#B8975A]/10 flex items-center justify-center -z-10 select-none">
+        <span className="font-serif text-[120px] text-[#B8975A]/5 font-light">M</span>
+      </div>
+      <div className="absolute top-1/2 -right-20 -translate-y-1/2 w-72 h-72 rounded-full border border-[#B8975A]/10 flex items-center justify-center -z-10 select-none">
+        <span className="font-serif text-[120px] text-[#B8975A]/5 font-light">M</span>
+      </div>
 
-        {/* Container with gold border and rounded corners */}
-        <div className="bg-[#FAF8F5]/30 rounded-3xl p-6 sm:p-10 border border-[#B8975A]/25 relative shadow-sm max-w-4xl mx-auto">
-          {/* Grid of features */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 sm:gap-8 relative z-10 justify-items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Container with warm sand background */}
+        <div className="bg-[#F4F0E6] rounded-3xl p-8 sm:p-12 lg:p-16 border border-[#EAE3D2] relative">
+          
+          <div className="flex justify-center mb-6">
+            <div className="w-12 h-12 rounded-full border border-[#B8975A]/30 flex items-center justify-center bg-white/50">
+              <span className="font-serif text-sm text-[#B8975A] font-semibold">M</span>
+            </div>
+          </div>
+
+          <h2 className="font-serif text-3xl sm:text-4xl text-[#2B2A27] text-center font-normal mb-16 max-w-2xl mx-auto leading-tight">
+            Tudo que você precisa para um evento perfeito
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {FEATURES.map((feat, index) => {
               const Icon = feat.icon;
               return (
-                <div key={index} className="flex flex-col items-center text-center space-y-3 group flex-1 min-w-[100px] cursor-pointer">
-                  {/* Circular Icon container with gold border */}
-                  <div className="w-12 h-12 rounded-full border border-[#B8975A]/40 bg-white flex items-center justify-center group-hover:bg-[#B8975A]/10 group-hover:border-[#B8975A] transition-all duration-300 transform group-hover:scale-105 shadow-sm">
-                    <Icon className="w-5 h-5 text-[#B8975A] transition-colors duration-300" />
+                <div key={index} className="flex flex-col items-center text-center space-y-4 group">
+                  <div className="w-16 h-16 rounded-full border border-[#B8975A] bg-white flex items-center justify-center shadow-sm group-hover:bg-[#B8975A] group-hover:text-white transition-all duration-300 transform group-hover:scale-105">
+                    <Icon className="w-6 h-6 text-[#B8975A] group-hover:text-white transition-colors duration-300" />
                   </div>
-
-                  {/* Text Details */}
-                  <h3 className="font-semibold text-[10px] sm:text-[11px] text-[#6E6B64] tracking-wide leading-tight px-1 group-hover:text-[#B8975A] transition-colors">
-                    {feat.title}
-                  </h3>
+                  
+                  <div className="space-y-2">
+                    <h3 className="font-semibold text-sm text-[#2B2A27] tracking-wide">
+                      {feat.title}
+                    </h3>
+                    <p className="text-xs text-[#6E6B64] font-light leading-relaxed max-w-[200px] mx-auto">
+                      {feat.description}
+                    </p>
+                  </div>
                 </div>
               );
             })}

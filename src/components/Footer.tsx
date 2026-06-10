@@ -1,5 +1,4 @@
 import { ArrowRight } from 'lucide-react';
-import logoGold from '../assets/logo_gold.png';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -12,10 +11,14 @@ export default function Footer() {
           
           <div className="lg:col-span-2 flex flex-col space-y-6">
             <a href="#" className="flex items-center space-x-3 group">
-              <img src={logoGold} alt="Momentos Inesquecíveis Logo" className="w-12 h-12 object-contain" />
+              <div className="w-10 h-10 rounded-full border-2 border-[#B8975A] flex items-center justify-center bg-[#F4F0E6] group-hover:bg-[#B8975A] transition-colors duration-300">
+                <span className="font-serif text-[#B8975A] group-hover:text-white font-semibold text-lg transition-colors duration-300">
+                  M
+                </span>
+              </div>
               <div className="flex flex-col">
-                <span className="font-serif text-base tracking-wider text-[#2B2A27] font-semibold leading-tight uppercase">
-                  MOMENTOS INESQUECÍVEIS
+                <span className="font-serif text-lg tracking-wider text-[#2B2A27] font-semibold leading-tight">
+                  MARÉ EVENTOS
                 </span>
                 <span className="text-[9px] uppercase tracking-[0.2em] text-[#B8975A] font-medium leading-none">
                   Plataforma
