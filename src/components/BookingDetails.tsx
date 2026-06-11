@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { 
-  Star, MapPin, Users, Heart, Sparkles, ArrowLeft, 
+  Star, MapPin, Users, Sparkles, ArrowLeft,
   Calendar as CalendarIcon, Clock, Bell, ChevronDown, ShieldCheck, 
-  Check, Phone, Mail, FileText, CheckCircle, Info, Search
+  Check, FileText, CheckCircle, Info, Search
 } from 'lucide-react';
 import logoGold from '../assets/logo_gold.png';
 
@@ -60,7 +60,7 @@ const getDaysInMonth = (year: number, month: number): CalendarDay[] => {
   
   // Current month days
   for (let d = 1; d <= daysInCurrentMonth; d++) {
-    let status: 'available' | 'pending' | 'reserved' | 'none' = 'available';
+    let status: 'available' | 'pending' | 'reserved' | 'none';
     
     if (year === 2026 && month === 5 && d === 14) {
       status = 'pending';
@@ -146,8 +146,6 @@ export default function BookingDetails({
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   // Success Modal state
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-
   // Scroll to top on load or step change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -337,8 +335,6 @@ export default function BookingDetails({
               const stepNum = idx + 1;
               const isActive = currentStep === stepNum;
               const isCompleted = currentStep > stepNum;
-              const isPending = currentStep < stepNum;
-              
               const IconComponent = step.icon;
               
               let iconBgClass = 'border-[#D1CDCE] bg-[#FAF8F5]/50 text-[#6E6B64]/60';

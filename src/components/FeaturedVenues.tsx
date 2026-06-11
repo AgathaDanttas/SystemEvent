@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star, MapPin, Users, Heart, Sparkles } from 'lucide-react';
+import { Star, MapPin, Heart } from 'lucide-react';
 
 import villaImg from '../assets/venue_villa_natureza.png';
 import jardimImg from '../assets/venue_espaco_jardim.png';

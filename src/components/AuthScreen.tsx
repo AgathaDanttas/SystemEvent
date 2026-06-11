@@ -7,6 +7,16 @@ interface AuthScreenProps {
   onClose: () => void;
   initialMode?: 'login' | 'register';
   onAuthSuccess?: (user: { name: string; email: string; role: string }) => void;
+  onRecoverPassword?: () => void;
+}
+
+interface RegisteredUser {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  cpf: string;
+  role: string;
 }
 
 const getRegisteredUsers = () => {
@@ -27,12 +37,12 @@ const getRegisteredUsers = () => {
   }
   try {
     return JSON.parse(usersStr);
-  } catch (e) {
+  } catch {
     return [];
   }
 };
 
-export default function AuthScreen({ onClose, initialMode = 'register', onAuthSuccess }: AuthScreenProps) {
+export default function AuthScreen({ onClose, initialMode = 'register', onAuthSuccess, onRecoverPassword }: AuthScreenProps) {
   const [role, setRole] = useState<'cliente' | 'fornecedor'>('fornecedor');
   const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [showPassword, setShowPassword] = useState(false);
@@ -102,7 +112,7 @@ export default function AuthScreen({ onClose, initialMode = 'register', onAuthSu
     }
 
     const users = getRegisteredUsers();
-    if (users.some((u: any) => u.email.toLowerCase() === email.toLowerCase())) {
+    if (users.some((user: RegisteredUser) => user.email.toLowerCase() === email.toLowerCase())) {
       setErrors({ email: 'Este e-mail já está cadastrado.' });
       return;
     }
@@ -133,7 +143,7 @@ export default function AuthScreen({ onClose, initialMode = 'register', onAuthSu
     }
 
     const users = getRegisteredUsers();
-    const matchedUser = users.find((u: any) => u.email.toLowerCase() === email.toLowerCase());
+    const matchedUser = users.find((user: RegisteredUser) => user.email.toLowerCase() === email.toLowerCase());
 
     if (!matchedUser) {
       setErrors({ email: 'Esta conta não existe. Verifique o e-mail ou cadastre-se.' });
@@ -487,9 +497,13 @@ export default function AuthScreen({ onClose, initialMode = 'register', onAuthSu
                         <label className="text-[9px] uppercase tracking-wider font-semibold text-[#6E6B64]">
                           Senha
                         </label>
-                        <a href="#" className="text-[9px] text-[#B8975A] hover:underline font-medium">
+                        <button
+                          type="button"
+                          onClick={onRecoverPassword}
+                          className="text-[9px] text-[#B8975A] hover:underline font-medium"
+                        >
                           Esqueceu a senha?
-                        </a>
+                        </button>
                       </div>
                       <div className="relative">
                         <input

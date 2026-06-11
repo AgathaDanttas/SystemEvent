@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { 
   Calendar, MapPin, Users, DollarSign, CalendarCheck2, ShieldCheck, 
-  Star, Headset, ChevronDown, Search, SlidersHorizontal, Heart, 
-  Cake, GraduationCap, MessageSquare, Briefcase, MoreHorizontal 
+  Star, Headset, ChevronDown, Search, SlidersHorizontal,
+  Cake, GraduationCap, MessageSquare, MoreHorizontal
 } from 'lucide-react';
 import heroNew from '../assets/hero_new.png';
 
@@ -249,15 +250,16 @@ export default function Hero({ onSearch }: HeroProps) {
             {/* Categories horizontal scrolling list */}
             <div className="space-y-2.5">
               <div className="flex overflow-x-auto gap-4 py-2 scrollbar-none snap-x snap-mandatory">
-                {[
+                {([
                   { name: 'Casamento', label: 'Casamentos', icon: 'custom-rings' },
                   { name: 'Aniversário', label: 'Aniversários', icon: Cake },
                   { name: 'Formatura', label: 'Formatura', icon: GraduationCap },
                   { name: 'Palestras', label: 'Palestras', icon: MessageSquare },
                   { name: 'Corporativo', label: 'Corporativo', icon: Users },
                   { name: 'Outros', label: 'Outros', icon: MoreHorizontal }
-                ].map((cat) => {
+                ] as Array<{ name: string; label: string; icon: LucideIcon | 'custom-rings' }>).map((cat) => {
                   const isSelected = selectedCategory === cat.name;
+                  const CategoryIcon = cat.icon !== 'custom-rings' ? cat.icon : null;
 
                   return (
                     <button
@@ -276,10 +278,9 @@ export default function Hero({ onSearch }: HeroProps) {
                             <circle cx="9" cy="12" r="4.5" />
                             <circle cx="15" cy="12" r="4.5" />
                           </svg>
-                        ) : (
-                          // @ts-ignore
-                          <cat.icon className="w-6 h-6" />
-                        )}
+                        ) : CategoryIcon ? (
+                          <CategoryIcon className="w-6 h-6" />
+                        ) : null}
                       </div>
                       <span className="text-[10px] font-semibold text-[#6E6B64] mt-1.5 leading-none transition-colors">
                         {cat.label}

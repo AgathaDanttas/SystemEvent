@@ -4,10 +4,11 @@ import {
   Star, CircleDollarSign, Calendar, Percent, BarChart3, Settings,
   Bell, ChevronDown, LogOut, FolderPlus, CalendarPlus, Image,
   Tag, ChevronLeft, ChevronRight, TrendingUp, MoreHorizontal,
-  X, Check, AlertCircle, Plus, Send, ShieldCheck
+  X, Check, AlertCircle, Plus, Send
 } from 'lucide-react';
 import logoGold from '../assets/logo_gold.png';
 import authBanner from '../assets/auth_banner.jpg';
+import OwnerDashboardSection from './OwnerDashboardSection';
 
 interface VendorDashboardProps {
   userName: string;
@@ -47,7 +48,7 @@ export default function VendorDashboard({
   const [confirmedCount, setConfirmedCount] = useState(32);
   const [solicitacoesCount, setSolicitacoesCount] = useState(86);
   const [receitaTotal, setReceitaTotal] = useState(48750);
-  const [viewsCount, setViewsCount] = useState(1248);
+  const [viewsCount] = useState(1248);
 
   // Modals Toggler State
   const [activeModal, setActiveModal] = useState<'addSpace' | 'blockAvailability' | 'addPhotos' | 'createPromo' | null>(null);
@@ -101,7 +102,7 @@ export default function VendorDashboard({
     
     // Add to reservations list
     const newRes = {
-      id: Date.now(),
+      id: Math.max(...reservationsList.map(res => res.id), 0) + 1,
       event: `${req.type} de ${req.name || 'Cliente'}`,
       venue: req.venue,
       date: req.date,
@@ -400,6 +401,8 @@ export default function VendorDashboard({
             </div>
             <div className="h-28 w-28 md:hidden"></div> {/* Spacer on mobile */}
           </div>
+
+          <OwnerDashboardSection activeSidebar={activeSidebar} />
 
           {/* Stats Widgets Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -762,16 +765,16 @@ export default function VendorDashboard({
 
               <div className="grid grid-cols-2 gap-3.5">
                 {[
-                  { label: 'Novo espaço', icon: FolderPlus, desc: 'Cadastrar espaço', modal: 'addSpace' },
-                  { label: 'Nova disponibilidade', icon: CalendarPlus, desc: 'Datas de bloqueio', modal: 'blockAvailability' },
-                  { label: 'Adicionar fotos', icon: Image, desc: 'Galeria do espaço', modal: 'addPhotos' },
-                  { label: 'Criar promoção', icon: Tag, desc: 'Cupons e descontos', modal: 'createPromo' }
+                  { label: 'Novo espaço', icon: FolderPlus, desc: 'Cadastrar espaço', modal: 'addSpace' as const },
+                  { label: 'Nova disponibilidade', icon: CalendarPlus, desc: 'Datas de bloqueio', modal: 'blockAvailability' as const },
+                  { label: 'Adicionar fotos', icon: Image, desc: 'Galeria do espaço', modal: 'addPhotos' as const },
+                  { label: 'Criar promoção', icon: Tag, desc: 'Cupons e descontos', modal: 'createPromo' as const }
                 ].map((action, i) => {
                   const ActionIcon = action.icon;
                   return (
                     <button
                       key={i}
-                      onClick={() => setActiveModal(action.modal as any)}
+                      onClick={() => setActiveModal(action.modal)}
                       className="border border-[#EAE3D2]/70 rounded-2xl p-4 flex flex-col items-center justify-center text-center space-y-2 hover:border-[#B8975A] hover:bg-[#FAF0E6]/10 transition-all cursor-pointer group shadow-sm hover:shadow-md"
                     >
                       <div className="w-10 h-10 rounded-full bg-[#FAF8F5] border border-[#EAE3D2]/40 flex items-center justify-center text-[#B8975A] group-hover:scale-105 transition-transform">
