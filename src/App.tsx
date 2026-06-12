@@ -9,6 +9,7 @@ import AuthScreen from './components/AuthScreen';
 import BookingDetails from './components/BookingDetails';
 import VendorDashboard from './components/VendorDashboard';
 import RegisterBanner from './components/RegisterBanner';
+import AllVenues from './components/AllVenues';
 import { Home, Heart, Calendar, MessageSquare, User } from 'lucide-react';
 
 interface Venue {
@@ -34,7 +35,7 @@ interface SearchFilters {
 
 function App() {
   const [filters, setFilters] = useState<SearchFilters | null>(null);
-  const [view, setView] = useState<'landing' | 'login' | 'register'>('landing');
+  const [view, setView] = useState<'landing' | 'login' | 'register' | 'all-venues'>('landing');
   
   // Auth state loaded from localStorage
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -144,6 +145,27 @@ function App() {
     );
   }
 
+  if (view === 'all-venues') {
+    return (
+      <div className="min-h-screen bg-[#FAF8F5] flex flex-col antialiased pb-20 lg:pb-0">
+        <Navbar 
+          onOpenAuth={(mode) => setView(mode)} 
+          isLoggedIn={isLoggedIn}
+          userAvatar={userProfile.avatar}
+          userName={userProfile.name}
+          userEmail={userProfile.email}
+          onLogout={handleLogout}
+          showDashboardLink={isLoggedIn && userProfile.role === 'fornecedor' && !showSupplierDashboard}
+          onSwitchToDashboard={() => setShowSupplierDashboard(true)}
+        />
+        <main className="flex-grow">
+          <AllVenues onBack={() => setView('landing')} onSelectVenue={handleSelectVenue} />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FAF8F5] flex flex-col antialiased pb-20 lg:pb-0">
       <Navbar 
@@ -161,12 +183,12 @@ function App() {
         <Hero onSearch={handleSearch} />
 
         <div id="locais-destaque">
-          <FeaturedVenues filters={filters} onSelectVenue={handleSelectVenue} />
+          <FeaturedVenues filters={filters} onSelectVenue={handleSelectVenue} onShowAll={() => setView('all-venues')} />
         </div>
 
         <FeaturesList />
 
-        <HowItWorks />
+        <HowItWorks onGetStarted={() => setView('register')} />
 
         {/* Crie sua conta banner under How It Works */}
         <RegisterBanner onRegisterClick={() => setView('register')} />
@@ -206,7 +228,7 @@ function App() {
           let isActive = false;
           if (tab.id === 'inicio' && view === 'landing' && !selectedVenue) isActive = true;
           if (tab.id === 'agendamentos' && selectedVenue) isActive = true;
-          if (tab.id === 'conta' && (view === 'login' || view === 'register' || (isLoggedIn && userProfile.role === 'fornecedor' && showSupplierDashboard))) isActive = true;
+          if (tab.id === 'conta' && ((view as string) === 'login' || (view as string) === 'register' || (isLoggedIn && userProfile.role === 'fornecedor' && showSupplierDashboard))) isActive = true;
 
           return (
             <button

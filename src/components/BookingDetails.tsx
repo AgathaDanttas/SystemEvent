@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { 
-  Star, MapPin, Users, Heart, Sparkles, ArrowLeft, 
+  Star, MapPin, Users, Sparkles, ArrowLeft, 
   Calendar as CalendarIcon, Clock, Bell, ChevronDown, ShieldCheck, 
-  Check, Phone, Mail, FileText, CheckCircle, Info, Search
+  Check, FileText, CheckCircle, Info, Search
 } from 'lucide-react';
 import logoGold from '../assets/logo_gold.png';
 
@@ -145,9 +145,6 @@ export default function BookingDetails({
   // Stepper state
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  // Success Modal state
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-
   // Scroll to top on load or step change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -230,12 +227,16 @@ export default function BookingDetails({
       <header className="w-full h-20 bg-[#FAF8F5] border-b border-[#EAE3D2] sticky top-0 z-50">
         <div className="max-w-7xl mx-auto w-full h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center cursor-pointer relative h-full" onClick={onBack}>
-            <img src={logoGold} alt="Momentos Inesquecíveis Logo" className="w-24 h-24 object-contain absolute left-0 top-1/2 -translate-y-1/2 max-w-none" />
-            <div className="flex flex-col text-left pl-[108px]">
-              <span className="font-serif text-base tracking-wider text-[#2B2A27] font-semibold leading-tight uppercase">
-                MOMENTOS INESQUECÍVEIS
+            <img 
+              src={logoGold} 
+              alt="Momentos Inesquecíveis Logo" 
+              className="w-11 h-11 sm:w-24 sm:h-24 object-contain absolute left-0 top-1/2 -translate-y-1/2 max-w-none" 
+            />
+            <div className="flex flex-col text-left pl-14 sm:pl-[108px]">
+              <span className="font-serif text-xs sm:text-base tracking-wider text-[#2B2A27] font-semibold leading-tight uppercase">
+                MOMENTOS<br className="sm:hidden" /> INESQUECÍVEIS
               </span>
-              <span className="text-[9px] uppercase tracking-[0.2em] text-[#B8975A] font-medium leading-none">
+              <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.1em] sm:tracking-[0.2em] text-[#B8975A] font-medium leading-none mt-0.5 sm:mt-0">
                 Plataforma
               </span>
             </div>
@@ -331,13 +332,12 @@ export default function BookingDetails({
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 flex flex-col">
 
         {/* Stepper Navigation (Matching Mockup with Icons) */}
-        <div className="w-full py-6 mb-10 overflow-x-auto">
-          <div className="flex items-center justify-between min-w-[760px] text-left">
+        <div className="w-full py-6 mb-10">
+          <div className="flex items-center justify-between w-full text-center">
             {stepsConfig.map((step, idx) => {
               const stepNum = idx + 1;
               const isActive = currentStep === stepNum;
               const isCompleted = currentStep > stepNum;
-              const isPending = currentStep < stepNum;
               
               const IconComponent = step.icon;
               
@@ -353,17 +353,17 @@ export default function BookingDetails({
 
               return (
                 <div key={stepNum} className="flex items-center flex-grow last:flex-grow-0">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all duration-300 ${iconBgClass}`}>
-                      {isCompleted ? <Check className="w-5 h-5 stroke-[2.5]" /> : <IconComponent className="w-5 h-5" />}
+                  <div className="flex flex-col sm:flex-row items-center sm:space-x-3 text-center sm:text-left">
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border flex items-center justify-center transition-all duration-300 ${iconBgClass}`}>
+                      {isCompleted ? <Check className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" /> : <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />}
                     </div>
-                    <div className="flex flex-col">
-                      <span className={`text-[10px] font-bold uppercase tracking-wider leading-none mb-1 ${numClass}`}>{step.number}</span>
-                      <span className={`text-xs font-semibold leading-none ${textClass}`}>{step.label}</span>
+                    <div className="flex flex-col mt-1 sm:mt-0 items-center sm:items-start">
+                      <span className={`text-[8px] sm:text-[10px] font-bold uppercase tracking-wider leading-none mb-0.5 sm:mb-1 ${numClass}`}>{step.number}</span>
+                      <span className={`text-[9px] sm:text-xs font-semibold leading-none ${textClass}`}>{step.label}</span>
                     </div>
                   </div>
                   {idx < stepsConfig.length - 1 && (
-                    <div className={`h-[1px] flex-grow mx-4 max-w-[120px] transition-all duration-300 ${isCompleted ? 'bg-[#B8975A]/40' : 'bg-[#EAE3D2]'}`}></div>
+                    <div className={`h-[1px] flex-grow mx-1.5 sm:mx-4 transition-all duration-300 ${isCompleted ? 'bg-[#B8975A]/40' : 'bg-[#EAE3D2]'}`}></div>
                   )}
                 </div>
               );

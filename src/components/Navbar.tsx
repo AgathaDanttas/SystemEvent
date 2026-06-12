@@ -150,9 +150,7 @@ export default function Navbar({
 
           {/* Central Circular Logo */}
           <a href="#" className="flex items-center justify-center cursor-pointer">
-            <div className="w-10 h-10 rounded-full border border-[#B8975A]/30 flex items-center justify-center bg-white shadow-sm font-serif text-[#B8975A] font-bold text-sm tracking-tighter">
-              MI
-            </div>
+            <img src={logoGold} alt="Momentos Inesquecíveis Logo" className="w-[38px] h-[38px] object-contain" />
           </a>
 
           {/* Right Action: Entrar & Cadastre-se buttons (when logged out), or avatar (when logged in) */}
@@ -169,16 +167,16 @@ export default function Navbar({
                 />
               </button>
             ) : (
-              <div className="flex items-center space-x-1.5">
+              <div className="flex items-center space-x-2">
                 <button
                   onClick={() => onOpenAuth?.('login')}
-                  className="px-3 py-1.5 text-[11px] font-semibold text-[#6E6B64] border border-[#EAE3D2] rounded-lg bg-white hover:bg-[#FAF8F5] transition-colors cursor-pointer"
+                  className="px-4 py-1.5 text-xs font-semibold text-[#2B2A27] border border-[#EAE3D2] rounded-lg bg-white hover:bg-[#FAF8F5] transition-colors cursor-pointer"
                 >
                   Entrar
                 </button>
                 <button
                   onClick={() => onOpenAuth?.('register')}
-                  className="px-3 py-1.5 text-[11px] font-semibold text-white bg-[#B8975A] hover:bg-[#A38349] rounded-lg transition-colors cursor-pointer"
+                  className="px-4 py-1.5 text-xs font-semibold text-white bg-[#B8975A] hover:bg-[#A38349] rounded-lg transition-colors cursor-pointer"
                 >
                   Cadastre-se
                 </button>

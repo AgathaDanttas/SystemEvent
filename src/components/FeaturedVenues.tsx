@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star, MapPin, Users, Heart, Sparkles } from 'lucide-react';
+import { Star, MapPin, Heart } from 'lucide-react';
 
 import villaImg from '../assets/venue_villa_natureza.png';
 import jardimImg from '../assets/venue_espaco_jardim.png';
@@ -85,9 +85,10 @@ interface FeaturedVenuesProps {
     query?: string;
   } | null;
   onSelectVenue?: (venue: Venue) => void;
+  onShowAll?: () => void;
 }
 
-export default function FeaturedVenues({ filters, onSelectVenue }: FeaturedVenuesProps) {
+export default function FeaturedVenues({ filters, onSelectVenue, onShowAll }: FeaturedVenuesProps) {
   const [favorites, setFavorites] = useState<number[]>([]);
 
   const toggleFavorite = (id: number) => {
@@ -131,7 +132,7 @@ export default function FeaturedVenues({ filters, onSelectVenue }: FeaturedVenue
   });
 
   return (
-    <section className="py-20 bg-[#FAF8F5]">
+    <section className="pt-6 pb-16 lg:py-20 bg-[#FAF8F5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8 text-left">
           <div>
@@ -142,7 +143,10 @@ export default function FeaturedVenues({ filters, onSelectVenue }: FeaturedVenue
               Espaços incríveis selecionados para o seu momento perfeito
             </p>
           </div>
-          <button className="inline-flex items-center text-xs sm:text-sm font-bold text-[#B8975A] hover:text-[#A38349] transition-colors cursor-pointer">
+          <button 
+            onClick={onShowAll}
+            className="inline-flex items-center text-xs sm:text-sm font-bold text-[#B8975A] hover:text-[#A38349] transition-colors cursor-pointer"
+          >
             <span>Ver todos</span>
             <span className="ml-1 text-[10px] sm:text-xs font-semibold">&gt;</span>
           </button>
